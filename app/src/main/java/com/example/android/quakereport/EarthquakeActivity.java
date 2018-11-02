@@ -16,8 +16,11 @@
 package com.example.android.quakereport;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -52,10 +55,19 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     private ProgressBar mProgressBar;
 
+    private boolean hasConnection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        hasConnection = networkInfo != null &&
+                networkInfo.isConnectedOrConnecting();
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
@@ -112,8 +124,12 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
-        // Set empty state text to display "No earthquakes found."
-        mEmptyStateTextView.setText(R.string.no_earthquakes);
+        if (hasConnection) {
+            // Set empty state text to display "No earthquakes found."
+            mEmptyStateTextView.setText(R.string.no_earthquakes);
+        } else {
+            mEmptyStateTextView.setText(R.string.no_network);
+        }
 
         mProgressBar.setVisibility(View.GONE);
 

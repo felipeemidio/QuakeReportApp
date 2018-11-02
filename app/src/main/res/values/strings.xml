@@ -19,4 +19,8 @@
 
     <!-- Text to display in the list when there are no earthquakes [CHAR LIMIT=NONE] -->
     <string name="no_earthquakes">No earthquakes found.</string>
+
+    <!-- Text to display in the list when there aren't connection with the network
+    [CHAR LIMIT=NONE] -->
+    <string name="no_network">No internet connection.</string>
 </resources>
